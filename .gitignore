@@ -1,0 +1,13 @@
+# Model weights — upload to Google Drive instead
+*.pth
+
+# Dataset — too large for GitHub
+ucsc-cse-144-spring-2026-final-project/
+
+# Python
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# macOS
+.DS_Store
