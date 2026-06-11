@@ -26,7 +26,9 @@ Run `pe_single_h52.ipynb` first, then `project-SigLIP2-head.ipynb`. Open each an
 
 ## Inference
 
-The last cell of `project-SigLIP2-head.ipynb` combines all three prediction sets into `submission.csv`:
+### After training
+
+Each notebook's Section 6 submission cell writes its predictions to a `.npy` file. The last cell of `project-SigLIP2-head.ipynb` then combines all three into `submission.csv`:
 
 ```
 combined = 0.1 * pe_probs + 0.5 * siglip2_probs + 0.4 * text_probs
@@ -34,13 +36,22 @@ combined = 0.1 * pe_probs + 0.5 * siglip2_probs + 0.4 * text_probs
 
 PE leads, SigLIP 2 vision adds diversity, and SigLIP zero-shot text matching breaks ties.
 
+### Using the provided pretrained weights (no training)
+
+1. Download `PE_model_h52.pth` and `SigLIP2_full_model_h52_ep50.pth` from the [Model Weights](#model-weights) link and place them in the project root.
+2. In `pe_single_h52.ipynb`, run all cells **except** Section 4 ("Train"), then run the Section 6 submission cell — it loads `PE_model_h52.pth` and writes `pe_probs_h52.npy`.
+3. In `project-SigLIP2-head.ipynb`, run all cells **except** Section 4 ("Train the Head"), then run the remaining Section 6 cells — they load `SigLIP2_full_model_h52_ep50.pth`, write `siglip2_probs_h52.npy` and `text_probs_h52.npy`, and combine everything into `submission.csv`.
+
 Upload `submission.csv` to Kaggle.
 
 ## Model Weights
 
 Download pretrained weights from Google Drive: [link](https://drive.google.com/drive/folders/1elpQwSoS2eV-4HmJo0Ouptkmvxp0wykk?usp=drive_link)
 
-Place the `.pth` files in the root project directory before running inference.
+Place these files in the project root before running inference (see [Inference](#inference) above):
+
+- `PE_model_h52.pth`
+- `SigLIP2_full_model_h52_ep50.pth`
 
 ## Kaggle Leaderboard
 
