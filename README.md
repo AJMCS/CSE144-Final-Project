@@ -1,6 +1,6 @@
 # CSE 144 Final Project
 
-100-class image classification using DINOv3 (Meta, 2025) with transfer learning.
+100-class image classification using a frozen-backbone ensemble of Perception Encoder (PE) and SigLIP 2, plus SigLIP zero-shot text matching.
 
 ## Setup
 
@@ -11,35 +11,40 @@ hf auth login   # paste your HuggingFace token when prompted
 
 ## Training
 
-Open `project-DINO.ipynb` and run all cells top to bottom. Change `SEED` in cell 2 for each run:
+Two notebooks each train a small linear head on top of a frozen vision backbone:
 
-| Run | SEED |
-|-----|------|
-| 1   | 44   |
-| 2   | 45   |
-| 3   | 46   |
-| 4   | 47   |
-| 5   | 48   |
+| Notebook | Backbone | Output |
+|----------|----------|--------|
+| `pe_single_h52.ipynb` | Perception Encoder ViT-L/336 (`vit_pe_core_large_patch14_336.fb`) | `PE_model_h52.pth`, `pe_probs_h52.npy` |
+| `project-SigLIP2-head.ipynb` | SigLIP 2 ViT-SO400M/378 (`vit_so400m_patch14_siglip_378.webli`) | `SigLIP2_full_model_h52.pth`, `siglip2_probs_h52.npy`, `text_probs_h52.npy` |
 
-Restart the kernel between runs. Each run saves a checkpoint: `dino_best_model_{SEED}.pth`
+Both backbones stay frozen — only a dropout + linear head trains, so each notebook runs in just a few minutes on a GPU.
 
-Training takes roughly 15-25 minutes per run on Apple Silicon (MPS).
+Run `pe_single_h52.ipynb` first, then `project-SigLIP2-head.ipynb`. Open each and run all cells top to bottom.
+
+`project-PE-head.ipynb` is an optional 3-seed PE ensemble variant for pushing accuracy further.
 
 ## Inference
 
-Once all 5 checkpoints exist, run cell 14 in `project-DINO.ipynb`. It loads all 5 models, runs 6 forward passes per test image (1 clean + 5 augmented), averages the predictions, and writes `submission.csv`.
+The last cell of `project-SigLIP2-head.ipynb` combines all three prediction sets into `submission.csv`:
+
+```
+combined = 0.1 * pe_probs + 0.5 * siglip2_probs + 0.4 * text_probs
+```
+
+PE leads, SigLIP 2 vision adds diversity, and SigLIP zero-shot text matching breaks ties.
 
 Upload `submission.csv` to Kaggle.
 
 ## Model Weights
 
-Download pretrained weights from Google Drive: [link]
+Download pretrained weights from Google Drive: [link](https://drive.google.com/drive/folders/1elpQwSoS2eV-4HmJo0Ouptkmvxp0wykk?usp=drive_link)
 
 Place the `.pth` files in the root project directory before running inference.
 
 ## Kaggle Leaderboard
 
-![Kaggle leaderboard](leaderboard_screenshot.png)
+![Kaggle leaderboard](/kaggle_leaderboard.png)
 
 ## Requirements
 
