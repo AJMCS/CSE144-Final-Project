@@ -18,7 +18,7 @@ Two notebooks each train a small linear head on top of a frozen vision backbone:
 | `pe_single_h52.ipynb` | Perception Encoder ViT-L/336 (`vit_pe_core_large_patch14_336.fb`) | `PE_model_h52.pth`, `pe_probs_h52.npy` |
 | `project-SigLIP2-head.ipynb` | SigLIP 2 ViT-SO400M/378 (`vit_so400m_patch14_siglip_378.webli`) | `SigLIP2_full_model_h52.pth`, `siglip2_probs_h52.npy`, `text_probs_h52.npy` |
 
-Both backbones stay frozen — only a dropout + linear head trains, so each notebook runs in just a few minutes on a GPU.
+Both backbones stay frozen; only a dropout + linear head trains, so each notebook runs in just a few minutes on a GPU.
 
 Run `pe_single_h52.ipynb` first, then `project-SigLIP2-head.ipynb`. Open each and run all cells top to bottom.
 
